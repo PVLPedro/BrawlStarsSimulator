@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import "tailwindcss";
+
+@theme {
+    --font-poppins: Poppins;
+
+    --color-bg-primary: hsl(220, 20%, 40%);
+    --color-bg-primary-hover: hsl(220, 20%, 45%);
+    --color-bg-secondary: hsl(220, 20%, 30%);
+    --color-bg-secondary-hover: hsl(220, 20%, 35%);
+
+    --color-border: hsl(220, 10%, 60%);
+
+    --color-highlight: hsl(43, 100%, 57%);
+
+    --spacing-2xs: 4px;
+    --spacing-xs: 6px;
+    --spacing-sm: 8px;
+    --spacing-bs: 12px;
+    --spacing-lg: 16px;
+    --spacing-xl: 24px;
+    --spacing-2xl: 32px;
+
+    --radius-2xs: 4px;
+    --radius-xs: 6px;
+    --radius-sm: 8px;
+    --radius-bs: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-2xl: 32px;
+
+    /* --font-weight-thin: 4px;
+    --font-weight-sm: 6px;
+    --font-weight-bs: 8px;
+    --font-weight-lg: 12px;
+    --font-weight-xl: 16px;
+    --font-weight-2xl: 24px;
+    --font-weight-3xl: 32px; */
+}
+
+body {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 var(--spacing-bs);
+    grid-template-areas:
+    "header header"
+    "sidebar main";
+}
+
+header {
+    grid-area: header;
+}
+
+aside {
+    grid-area: sidebar;
+}
+
+main {
+    grid-area: main;
+}

@@ -1,5 +1,11 @@
+---
+import Header from '../components/base/Header.astro'
+import Sidebar from '../components/base/Sidebar.astro'
+import '../styles/global.css'
+---
+
 <!doctype html>
-<html lang="en">
+<html lang="pt-br">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -8,16 +14,58 @@
 		<meta name="generator" content={Astro.generator} />
 		<title>Astro Basics</title>
 	</head>
-	<body>
-		<slot />
+	<body class="font-poppins bg-bg-secondary text-white p-bs">
+		<Header />
+		<Sidebar />
+		<main class="rounded-xl bg-bg-primary min-h-[calc(100dvh-80px-calc(2*var(--spacing-bs)))]">
+			<slot />
+		</main>
 	</body>
-</html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+	<script defer>
+
+function getById(id) {
+    return document.getElementById(id);
+}
+
+function updateCoins() {
+    const coinsDisplay = getById('coins-display');
+
+    let currentCoins = parseInt(localStorage.getItem('coins')) || 0;
+    
+    coinsDisplay.textContent = currentCoins;
+}
+
+const openBrawlBox = getById('brawl-box');
+openBrawlBox.addEventListener('click', brawlBox);
+const resetCoinsBtn = getById('reset-coins');
+resetCoinsBtn.addEventListener('click', resetCoins);
+
+function brawlBox() {
+    let currentCoins = parseInt(localStorage.getItem('coins')) || 0;
+    
+    let brawlBoxCoins = Math.floor(Math.random() * (200 - 100 + 1)) + 100;
+
+    console.log(`${currentCoins} + ${brawlBoxCoins} = ${currentCoins + brawlBoxCoins}`)
+
+    currentCoins += brawlBoxCoins;
+
+    localStorage.setItem('coins', currentCoins);
+
+    updateCoins();
+}
+
+function resetCoins() {
+    localStorage.setItem('coins', 0);
+
+    updateCoins();
+}
+
+function updateResources() {
+    updateCoins();
+}
+
+updateResources();
+
+	</script>
+</html>
