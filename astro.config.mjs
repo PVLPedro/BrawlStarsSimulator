@@ -9,5 +9,5 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
   site: 'https://PVLPedro.github.io',
-  base: '/BrawlStarsSimulator',
+  base: '/BrawlStarsSimulator/',
 });
