@@ -1,8 +1,29 @@
 ---
-import Button from '../components/Button.astro';
 import Layout from '../layouts/Layout.astro';
+import Title from '../components/Title.astro';
+import BoxCard from '../components/Boxes/BoxCard.astro';
+import Button from '../components/Button.astro';
 ---
 
 <Layout>
-	<p>Geral</p>
+	<main class="flex flex-col gap-bs min-h-[calc(100dvh-80px-calc(2*var(--spacing-bs)))] p-bs rounded-xl bg-bg-primary">
+		<Title>Caixas</Title>
+		<section class="flex gap-bs flex-wrap">
+			<BoxCard box="brawl-box" imgAlt="Caixa Brawl">
+				<span class="text-lg font-medium">Caixa Brawl</span>
+				<span>Ilimitado</span>
+				<Button id="brawl-box" width="max-w-40">Abrir</Button>
+			</BoxCard>
+			<BoxCard box="big-box" imgAlt="Caixa Grande">
+				<span class="text-lg font-medium">Caixa Grande</span>
+				<span>Quantidade: <!-- {bigBoxCount} --></span>
+				<Button id="big-box" width="max-w-40">Abrir</Button>
+			</BoxCard>
+			<BoxCard box="mega-box" imgAlt="Mega Caixa">
+				<span class="text-lg font-medium">Mega Caixa</span>
+				<span>Quantidade: <!-- {megaBoxCount --></span>
+				<Button id="mega-box" width="max-w-40">Abrir</Button>
+			</BoxCard>
+		</section>
+	</main>
 </Layout>

@@ -12,6 +12,10 @@
     --color-border: hsl(220, 10%, 60%);
 
     --color-highlight: hsl(43, 100%, 57%);
+    --color-highlight-hover: hsl(43, 100%, 67%);
+
+    --color-bg-highlight: hsl(43, 100%, 45%);
+    --color-bg-highlight-hover: hsl(43, 100%, 55%);
 
     --spacing-2xs: 4px;
     --spacing-xs: 6px;

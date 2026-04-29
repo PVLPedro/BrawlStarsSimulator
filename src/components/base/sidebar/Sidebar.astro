@@ -1,0 +1,15 @@
+---
+import UnorderedList from './UnorderedList.astro';
+import ListItem from './ListItem.astro';
+
+import { Toolbox, HandFist, CircleStar, ChartColumn } from '@lucide/astro';
+---
+
+<aside class="w-50 p-bs bg-bg-primary rounded-xl [&_svg]:size-6 [&_svg]:stroke-2">
+    <UnorderedList>
+        <ListItem text="Caixas" icon={Toolbox} href="/BrawlStarsSimulator/" link="" />
+        <ListItem text="Brawlers" icon={HandFist} href="/BrawlStarsSimulator/brawlers" link="brawlers" />
+        <ListItem text="Coleção" icon={CircleStar} href="/BrawlStarsSimulator/collection" link="collection" />
+        <ListItem text="Chances" icon={ChartColumn} href="/BrawlStarsSimulator/drop-rates" link="drop-rates" />
+    </UnorderedList>
+</aside>

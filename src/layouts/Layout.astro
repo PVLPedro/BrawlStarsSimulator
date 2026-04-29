@@ -1,6 +1,6 @@
 ---
 import Header from '../components/base/Header.astro'
-import Sidebar from '../components/base/Sidebar.astro'
+import Sidebar from '../components/base/sidebar/Sidebar.astro'
 import '../styles/global.css'
 ---
 
@@ -17,9 +17,7 @@ import '../styles/global.css'
 	<body class="font-poppins bg-bg-secondary text-white p-bs">
 		<Header />
 		<Sidebar />
-		<main class="rounded-xl bg-bg-primary min-h-[calc(100dvh-80px-calc(2*var(--spacing-bs)))]">
-			<slot />
-		</main>
+		<slot />
 	</body>
 
 	<script defer>
@@ -36,24 +34,227 @@ function updateCoins() {
     coinsDisplay.textContent = currentCoins;
 }
 
-const openBrawlBox = getById('brawl-box');
-openBrawlBox.addEventListener('click', brawlBox);
+const openBrawlBoxBtn = getById('brawl-box');
+openBrawlBoxBtn.addEventListener('click', openBrawlBox);
+
+const openBigBoxBtn = getById('big-box');
+openBigBoxBtn.addEventListener('click', openBigBox);
+
+const openMegaBoxBtn = getById('mega-box');
+openMegaBoxBtn.addEventListener('click', openMegaBox);
+
 const resetCoinsBtn = getById('reset-coins');
 resetCoinsBtn.addEventListener('click', resetCoins);
 
-function brawlBox() {
-    let currentCoins = parseInt(localStorage.getItem('coins')) || 0;
-    
-    let brawlBoxCoins = Math.floor(Math.random() * (200 - 100 + 1)) + 100;
+function openBrawlBox() {
+	
+	let coins = localStorage.getItem('coins');
+	let powerPoints = localStorage.getItem('powerPoints');
+	let brawlers = JSON.parse(localStorage.getItem('brawlers')) || [];
 
-    console.log(`${currentCoins} + ${brawlBoxCoins} = ${currentCoins + brawlBoxCoins}`)
+	let box = 'box';
 
-    currentCoins += brawlBoxCoins;
+	powerPointsDraw(2, box);
+	generalDraw(1, box);
 
-    localStorage.setItem('coins', currentCoins);
-
-    updateCoins();
+    updateResources();
 }
+
+function openBigBox() {
+
+	let bigBoxCount = parseInt(localStorage.getItem('bigBoxCount')) || 0;
+
+	if (bigBoxCount === 0) {
+		return;
+	}
+	
+	let coins = localStorage.getItem('coins');
+	let powerPoints = localStorage.getItem('powerPoints');
+	let brawlers = JSON.parse(localStorage.getItem('brawlers')) || [];
+
+	let box = 'box';
+
+	powerPointsDraw(3, box);
+	generalDraw(3, box)
+
+    updateResources();
+}
+
+function openMegaBox() {
+	
+	let coins = localStorage.getItem('coins');
+	let powerPoints = localStorage.getItem('powerPoints');
+	let brawlers = JSON.parse(localStorage.getItem('brawlers')) || [];
+
+	let box = 'box';
+
+	powerPointsDraw(5, box);
+	generalDraw(5, box)
+
+    updateResources();
+}
+
+function powerPointsDraw(count, type) {
+	
+}
+
+function generalDraw(count, type) {
+
+	const max = drawTable.reduce((sum, item) => sum + item.chance, 0);
+	const min = 0;
+
+	let coinsReward = 0, powerPointsReward = 0, creditsReward = 0, gemsReward = 0;
+	let skillsReward = [], brawlersReward = []
+
+	for (let i = 0; i < count; i++) {
+
+		let random = parseFloat((Math.random() * (max - min) + min).toFixed(2))
+		console.log(random);
+		
+		let entry = getTable(random);
+
+		console.log(entry.type);
+		
+
+		if (entry.item.includes('lowAmount')) {
+			
+			if (entry.type == "coins") {
+				coinsReward += Math.floor(Math.random() * (150 - 30) + 20)
+			}
+
+			if (entry.type == "powerPoints") {
+				powerPointsReward += Math.floor(Math.random() * (120 - 20) + 20)
+			}
+
+			if (entry.type == "credits") {
+				creditsReward += Math.floor(Math.random() * (100 - 10) + 10)
+			}
+
+			if (entry.type == "gems") {
+				gemsReward += Math.floor(Math.random() * (10 - 1) + 1)
+			}
+			
+		}
+
+		if (entry.item.includes('highAmount')) {
+			
+			if (entry.type == "coins") {
+				coinsReward += entry.value;
+			}
+			
+			if (entry.type == "powerPoints") {
+				powerPointsReward += entry.value;
+			}
+			
+			if (entry.type == "credits") {
+				creditsReward += entry.value;
+			}
+			
+			if (entry.type == "gems") {
+				gemsReward += entry.value;
+			}
+
+		}
+
+		if (entry.type == "skill") {
+			skillsReward.push(entry.lenght)
+		}
+
+		if (entry.type == "brawler") {
+			brawlersReward.push(entry.lenght)
+		}
+
+	}
+
+	console.log(`Moedas: ${coinsReward}; Pontos de Poder: ${powerPointsReward}, Vales: ${creditsReward}; Gemas: ${gemsReward}; Habilidades: ${skillsReward}; Brawlers: ${brawlersReward}`);
+	
+}
+
+function getTable(random) {
+	for (let entry of drawTable) {
+		if (random < entry.chance) {
+			console.log(entry.item)
+			return entry;
+		}
+		random -= entry.chance;
+	}
+}
+
+const drawTable = [
+	// Recursos
+	{ item: 'lowAmountCoins', chance: 35, type: 'coins'},
+	{ item: 'lowAmountPowerPoints', chance: 25, type: 'powerPoints'},
+	{ item: 'lowAmountCredits', chance: 15, type: 'credits'},
+	{ item: 'lowAmountGems', chance: 5, type: 'gems'},
+
+	{ item: 'highAmountCoins', chance: 4.2, type: 'coin', value: 1000},
+	{ item: 'highAmountPowerPoints', chance: 4.2, type: 'powerPoints', value: 1000},
+	{ item: 'highAmountCredits', chance: 4.2, type: 'credits', value: 1000},
+	{ item: 'highAmountGems', chance: 0.4, type: 'gems', value: 100},
+
+	// Total de lowAmount = 80
+	// Total de highAmount = 13
+
+	// Total de Recursos = 93
+
+	// Habilidades
+	{ item: 'gadget', chance: 2, type: 'skill' },
+	{ item: 'starPower', chance: 1, type: 'skill' },
+	{ item: 'hypercharge', chance: 0.5, type: 'skill' },
+
+	// Total de Habilidades = 3.5
+
+	// Brawlers
+	{ item: 'rareBrawler', chance: 1, type: 'brawler'},
+	{ item: 'superRareBrawler', chance: 0.9, type: 'brawler'},
+	{ item: 'epicBrawler', chance: 0.7, type: 'brawler'},
+	{ item: 'mythicBrawler', chance: 0.5, type: 'brawler'},
+	{ item: 'legendaryBrawler', chance: 0.3, type: 'brawler'},
+	{ item: 'ultraLegendaryBrawler', chance: 0.1, type: 'brawler'},
+
+	// Total de Brawlers = 3.5
+
+	// Total = 100
+]
+
+const brawlersMap = [
+	{ brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+	// { brawler: 'shelly', rariry: 'starter'},
+]
 
 function resetCoins() {
     localStorage.setItem('coins', 0);

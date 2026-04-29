@@ -1,0 +1,15 @@
+---
+const pathname = new URL(Astro.request.url).pathname;
+
+const activeClass = "bg-bg-primary-hover text-highligh";
+const generalClass = "flex rounded-bs hover:bg-bg-primary-hover";
+
+const { text, icon: Icon, href, link } = Astro.props;
+---
+
+<li class=`${generalClass} ${pathname == href ? activeClass : ""}`>
+    <a href={href} id={link} class="flex w-full gap-bs p-bs text-white">
+        <Icon class="shrink-0" />
+        <span>{text}</span>
+    </a>
+</li>
