@@ -1,5 +1,5 @@
 ---
-import Header from '../components/base/Header.astro'
+import Header from '../components/base/header/Header.astro'
 import Sidebar from '../components/base/sidebar/Sidebar.astro'
 import '../styles/global.css'
 ---
@@ -20,91 +20,158 @@ import '../styles/global.css'
 		<slot />
 	</body>
 
+	<!-- <script defer slot="body-scripts" src="../scripts/brawlers.js"></script> -->
+
 	<script defer>
 
 function getById(id) {
     return document.getElementById(id);
 }
 
-function updateCoins() {
-    const coinsDisplay = getById('coins-display');
-
-    let currentCoins = parseInt(localStorage.getItem('coins')) || 0;
-    
-    coinsDisplay.textContent = currentCoins;
+function queryAll(className) {
+    return document.querySelectorAll(className);
 }
 
 const openBrawlBoxBtn = getById('brawl-box');
-openBrawlBoxBtn.addEventListener('click', openBrawlBox);
+openBrawlBoxBtn?.addEventListener('click', () => {
+	openBrawlBox()
+});
 
 const openBigBoxBtn = getById('big-box');
-openBigBoxBtn.addEventListener('click', openBigBox);
+openBigBoxBtn?.addEventListener('click', () => {
+	openBigBox()
+});
 
 const openMegaBoxBtn = getById('mega-box');
-openMegaBoxBtn.addEventListener('click', openMegaBox);
-
-const resetCoinsBtn = getById('reset-coins');
-resetCoinsBtn.addEventListener('click', resetCoins);
+openMegaBoxBtn?.addEventListener('click', () => {
+	openMegaBox()
+});
 
 function openBrawlBox() {
 	
-	let coins = localStorage.getItem('coins');
-	let powerPoints = localStorage.getItem('powerPoints');
-	let brawlers = JSON.parse(localStorage.getItem('brawlers')) || [];
+	let storage = getStorage();
 
-	let box = 'box';
+	// powerPointsDraw(2, "brawl-box");
 
-	powerPointsDraw(2, box);
-	generalDraw(1, box);
+	let generalResources = generalDraw(1, "brawl-box");
+
+	storage.coins += parseInt(generalResources.totalCoinsReward) || 0;
+	storage.powerPoints += parseInt(generalResources.totalPowerPointsReward) || 0;
+	storage.credits += parseInt(generalResources.totalCreditsReward) || 0;
+	storage.gems += parseInt(generalResources.totalGemsReward) || 0;
+	
+	localStorage.setItem('coins', storage.coins);
+	localStorage.setItem('powerPoints', storage.powerPoints);
+	localStorage.setItem('credits', storage.credits);
+	localStorage.setItem('gems', storage.gems);
 
     updateResources();
+
+	openingDelay();
 }
 
 function openBigBox() {
 
-	let bigBoxCount = parseInt(localStorage.getItem('bigBoxCount')) || 0;
-
-	if (bigBoxCount === 0) {
-		return;
-	}
+	let bigBoxCount = localStorage.getItem('bigBoxCount') || 0;
 	
-	let coins = localStorage.getItem('coins');
-	let powerPoints = localStorage.getItem('powerPoints');
-	let brawlers = JSON.parse(localStorage.getItem('brawlers')) || [];
+	if (bigBoxCount <= 0) {
+		console.log('oi');
+		
+		return window.location.href = "/BrawlStarsSimulator/shop";
+	}
 
-	let box = 'box';
+	bigBoxCount -= 1;
 
-	powerPointsDraw(3, box);
-	generalDraw(3, box)
+	localStorage.setItem('bigBoxCount', bigBoxCount);
+
+	let storage = getStorage();
+
+	// powerPointsDraw(3, "big-box");
+
+	let generalResources = generalDraw(3, "big-box");
+
+	storage.coins += parseInt(generalResources.totalCoinsReward) || 0;
+	storage.powerPoints += parseInt(generalResources.totalPowerPointsReward) || 0;
+	storage.credits += parseInt(generalResources.totalCreditsReward) || 0;
+	storage.gems += parseInt(generalResources.totalGemsReward) || 0;
+	
+	localStorage.setItem('coins', storage.coins);
+	localStorage.setItem('powerPoints', storage.powerPoints);
+	localStorage.setItem('credits', storage.credits);
+	localStorage.setItem('gems', storage.gems);
 
     updateResources();
+
+	openingDelay();
 }
 
 function openMegaBox() {
+
+	let megaBoxCount = localStorage.getItem('megaBoxCount') || 0;
+
+	if (megaBoxCount <= 0) {
+		return window.location.href = "/BrawlStarsSimulator/shop";
+	}
+
+	megaBoxCount -= 1;
+
+	localStorage.setItem('megaBoxCount', megaBoxCount);
 	
-	let coins = localStorage.getItem('coins');
-	let powerPoints = localStorage.getItem('powerPoints');
-	let brawlers = JSON.parse(localStorage.getItem('brawlers')) || [];
+	let storage = getStorage();
 
-	let box = 'box';
+	// powerPointsDraw(5, "mega-box");
 
-	powerPointsDraw(5, box);
-	generalDraw(5, box)
+	let generalResources = generalDraw(5, "mega-box");
+
+	storage.coins += parseInt(generalResources.totalCoinsReward) || 0;
+	storage.powerPoints += parseInt(generalResources.totalPowerPointsReward) || 0;
+	storage.credits += parseInt(generalResources.totalCreditsReward) || 0;
+	storage.gems += parseInt(generalResources.totalGemsReward) || 0;
+	
+	localStorage.setItem('coins', storage.coins);
+	localStorage.setItem('powerPoints', storage.powerPoints);
+	localStorage.setItem('credits', storage.credits);
+	localStorage.setItem('gems', storage.gems);
 
     updateResources();
+
+	openingDelay();
+}
+
+function getStorage() {
+	let coins = parseInt(localStorage.getItem('coins')) || 0;
+	let powerPoints = parseInt(localStorage.getItem('powerPoints')) || 0;
+	let credits = parseInt(localStorage.getItem('credits')) || 0;
+	let gems = parseInt(localStorage.getItem('gems')) || 0;
+	let brawlers = JSON.parse(localStorage.getItem('brawlers')) || [];
+
+	return { coins, powerPoints, credits, gems, brawlers };
 }
 
 function powerPointsDraw(count, type) {
 	
 }
 
-function generalDraw(count, type) {
+function generalDraw(count, boxType) {
+
+	// let fastMode = localStorage.geiItem('openingMode');
+	let fastMode = true;
+
+	let popoverBtn = getById('open-' + boxType);
+	let popover = getById(boxType + '-reward');
+
+	if (popover.matches(':popover-open')) {
+		popoverBtn.setAttribute('popovertargetaction', 'show');
+	} else {
+		popoverBtn.setAttribute('popovertargetaction', 'toggle');
+	}
 
 	const max = drawTable.reduce((sum, item) => sum + item.chance, 0);
 	const min = 0;
 
-	let coinsReward = 0, powerPointsReward = 0, creditsReward = 0, gemsReward = 0;
-	let skillsReward = [], brawlersReward = []
+	let coinsReward = [], powerPointsReward = [], creditsReward = [], gemsReward = [], skillsReward = [], brawlersReward = [];
+
+	let totalCoinsReward = 0, totalPowerPointsReward = 0, totalCreditsReward = 0, totalGemsReward = 0;
 
 	for (let i = 0; i < count; i++) {
 
@@ -113,61 +180,96 @@ function generalDraw(count, type) {
 		
 		let entry = getTable(random);
 
-		console.log(entry.type);
+		console.log("Item Sorteado: " + entry.type);
 		
-
-		if (entry.item.includes('lowAmount')) {
-			
-			if (entry.type == "coins") {
-				coinsReward += Math.floor(Math.random() * (150 - 30) + 20)
+		if (fastMode) {
+		
+			if (entry.item.includes('lowAmount')) {
+				
+				if (entry.type == "coins") {
+					coinsReward.push(Math.floor(Math.random() * (121 - 30) + 30))
+				}
+	
+				if (entry.type == "powerPoints") {
+					powerPointsReward.push(Math.floor(Math.random() * (101 - 20) + 20))
+				}
+	
+				if (entry.type == "credits") {
+					creditsReward.push(Math.floor(Math.random() * (81 - 10) + 10))
+				}
+	
+				if (entry.type == "gems") {
+					gemsReward.push(Math.floor(Math.random() * (6 - 1) + 1))
+				}
+				
 			}
-
-			if (entry.type == "powerPoints") {
-				powerPointsReward += Math.floor(Math.random() * (120 - 20) + 20)
+	
+			if (entry.item.includes('highAmount')) {
+				
+				if (entry.type == "coins") {
+					coinsReward.push(entry.value);
+				}
+				
+				if (entry.type == "powerPoints") {
+					powerPointsReward.push(entry.value);
+				}
+				
+				if (entry.type == "credits") {
+					creditsReward.push(entry.value);
+				}
+				
+				if (entry.type == "gems") {
+					gemsReward.push(entry.value);
+				}
 			}
-
-			if (entry.type == "credits") {
-				creditsReward += Math.floor(Math.random() * (100 - 10) + 10)
-			}
-
-			if (entry.type == "gems") {
-				gemsReward += Math.floor(Math.random() * (10 - 1) + 1)
-			}
-			
 		}
-
-		if (entry.item.includes('highAmount')) {
-			
-			if (entry.type == "coins") {
-				coinsReward += entry.value;
-			}
-			
-			if (entry.type == "powerPoints") {
-				powerPointsReward += entry.value;
-			}
-			
-			if (entry.type == "credits") {
-				creditsReward += entry.value;
-			}
-			
-			if (entry.type == "gems") {
-				gemsReward += entry.value;
-			}
-
-		}
-
-		if (entry.type == "skill") {
-			skillsReward.push(entry.lenght)
-		}
-
-		if (entry.type == "brawler") {
-			brawlersReward.push(entry.lenght)
-		}
-
 	}
 
-	console.log(`Moedas: ${coinsReward}; Pontos de Poder: ${powerPointsReward}, Vales: ${creditsReward}; Gemas: ${gemsReward}; Habilidades: ${skillsReward}; Brawlers: ${brawlersReward}`);
+	let rewardList = queryAll('.reward-list');
 	
+	rewardList.forEach(list => {
+		list.textContent = "";
+	});
+
+	if (fastMode) {
+		totalCoinsReward = fastModeSum(coinsReward, "coins", boxType);
+		totalPowerPointsReward = fastModeSum(powerPointsReward, "power-points", boxType);
+		totalCreditsReward = fastModeSum(creditsReward, "credits", boxType);
+		totalGemsReward = fastModeSum(gemsReward, "gems", boxType);
+	}
+	
+	console.log(`Moedas: ${totalCoinsReward}; Pontos de Poder: ${totalPowerPointsReward}, Vales: ${totalCreditsReward}; Gemas: ${totalGemsReward}`);
+	
+	return { totalCoinsReward, totalPowerPointsReward, totalCreditsReward, totalGemsReward }
+}
+
+function fastModeSum(reward, type, boxType) {
+
+	let total = reward.reduce((total, value) => total + value, 0)
+
+	if (total == 0) return total = 0;
+
+	let li = document.createElement('li');
+
+	let img = document.createElement('img');
+	img.classList = "p-2xs aspect-ratio resize-none w-16"
+	img.setAttribute('src', 'assets/images/icon-' + type + '.png');
+	img.setAttribute('background', + type)
+
+	let div = document.createElement('div');
+	div.classList = 'flex items-center grow h-16 bg-' + type;
+	div.append(img)
+
+	let span = document.createElement('span');
+	span.textContent = total;
+
+	li.append(div, span);
+
+	let rewardList = getById(boxType + '-reward-list');
+
+	rewardList.append(li);
+;
+	return total;
 }
 
 function getTable(random) {
@@ -180,90 +282,144 @@ function getTable(random) {
 	}
 }
 
+function openingDelay() {
+
+}
+
 const drawTable = [
 	// Recursos
-	{ item: 'lowAmountCoins', chance: 35, type: 'coins'},
-	{ item: 'lowAmountPowerPoints', chance: 25, type: 'powerPoints'},
-	{ item: 'lowAmountCredits', chance: 15, type: 'credits'},
-	{ item: 'lowAmountGems', chance: 5, type: 'gems'},
+	{ item: "lowAmountCoins", chance: 41, type: "coins"},
+	{ item: "lowAmountPowerPoints", chance: 31, type: "powerPoints"},
+	{ item: "lowAmountCredits", chance: 21, type: "credits"},
+	{ item: "lowAmountGems", chance: 5.8, type: "gems"},
 
-	{ item: 'highAmountCoins', chance: 4.2, type: 'coin', value: 1000},
-	{ item: 'highAmountPowerPoints', chance: 4.2, type: 'powerPoints', value: 1000},
-	{ item: 'highAmountCredits', chance: 4.2, type: 'credits', value: 1000},
-	{ item: 'highAmountGems', chance: 0.4, type: 'gems', value: 100},
+	{ item: "highAmountCoins", chance: 0.2, type: "coins", value: 1000},
+	{ item: "highAmountPowerPoints", chance: 0.1, type: "powerPoints", value: 1000},
+	{ item: "highAmountCredits", chance: 0.1, type: "credits", value: 1000},
+	{ item: "highAmountGems", chance: 0.1, type: "gems", value: 100},
 
-	// Total de lowAmount = 80
-	// Total de highAmount = 13
+	// Total de lowAmount = 95
+	// Total de highAmount = 0.5
 
-	// Total de Recursos = 93
+	// Total de Recursos = 95.5
 
 	// Habilidades
-	{ item: 'gadget', chance: 2, type: 'skill' },
-	{ item: 'starPower', chance: 1, type: 'skill' },
-	{ item: 'hypercharge', chance: 0.5, type: 'skill' },
+	{ item: "gadget", chance: 1, type: "skill", name: "gadget" },
+	{ item: "starPower", chance: 0.7, type: "skill", name: "starPower" },
+	{ item: "hypercharge", chance: 0.3, type: "skill", name: "hypercharge" },
 
-	// Total de Habilidades = 3.5
+	// Total de Habilidades = 2
+	// Total (até aqui) = 97.5
 
 	// Brawlers
-	{ item: 'rareBrawler', chance: 1, type: 'brawler'},
-	{ item: 'superRareBrawler', chance: 0.9, type: 'brawler'},
-	{ item: 'epicBrawler', chance: 0.7, type: 'brawler'},
-	{ item: 'mythicBrawler', chance: 0.5, type: 'brawler'},
-	{ item: 'legendaryBrawler', chance: 0.3, type: 'brawler'},
-	{ item: 'ultraLegendaryBrawler', chance: 0.1, type: 'brawler'},
+	{ item: "rareBrawler", chance: 0.8, type: "brawler", name: "rareBrawler"},
+	{ item: "superRareBrawler", chance: 0.6, type: "brawler", name: "superRareBrawler"},
+	{ item: "epicBrawler", chance: 0.5, type: "brawler", name: "epicBrawler"},
+	{ item: "mythicBrawler", chance: 0.3, type: "brawler", name: "mythicBrawler"},
+	{ item: "legendaryBrawler", chance: 0.2, type: "brawler", name: "legendaryBrawler"},
+	{ item: "ultraLegendaryBrawler", chance: 0.1, type: "brawler", name: "ultraLegendaryBrawler"},
 
-	// Total de Brawlers = 3.5
+	// Total de Brawlers = 2.5
 
 	// Total = 100
 ]
 
-const brawlersMap = [
-	{ brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-	// { brawler: 'shelly', rariry: 'starter'},
-]
+let bigBoxPurchase = getById('big-box-purchase');
+bigBoxPurchase?.addEventListener('click', () => {
+	confirmPurchase(30, bigBoxPurchase, "bigBoxCount", ".big-box-count");
+})
 
-function resetCoins() {
-    localStorage.setItem('coins', 0);
+let megaBoxPurchase = getById('mega-box-purchase');
+megaBoxPurchase?.addEventListener('click', () => {
+	confirmPurchase(80, megaBoxPurchase, "megaBoxCount", ".mega-box-count");
+})
 
-    updateCoins();
+function confirmPurchase(value, button, item) {
+
+	let currentGems = localStorage.getItem('gems');
+	let currentCount = parseInt(localStorage.getItem(item));
+
+	if (currentGems < value) {
+		button.textContent = "Gemas Insuficientes";
+		button.classList.remove('bg-buy', 'hover:bg-buy-hover');
+		button.classList.add('bg-alert', 'hover:bg-alert-hover');
+		return
+	}
+
+	currentGems -= value;
+	currentCount += 1;
+
+	localStorage.setItem('gems', currentGems);
+	localStorage.setItem(item, currentCount);
+	
+	updateCount();
+	updateResources();
 }
 
+function updateCount() {
+	let display = queryAll('.count');
+
+	display.forEach(element => {
+		id = element.id;
+		let storage = localStorage.getItem(id)
+		element.textContent = "Quantidade: " + storage;
+	})
+}
+
+// const resetResourcesBtn = getById('reset-resources');
+// resetResourcesBtn?.addEventListener('click', resetResources);
+
+// function resetResources() {
+//     localStorage.setItem('coins', 0);
+//     localStorage.setItem('powerPoints', 0);
+//     localStorage.setItem('credits', 0);
+//     localStorage.setItem('gems', 0);
+//     localStorage.setItem('bigBoxCount', 0);
+//     localStorage.setItem('megaBoxCount', 0);
+
+//     updateResources();
+// }
+
+// let thousandBtn = getById('thousand-resources');
+// thousandBtn?.addEventListener('click', thousand)
+
+// function thousand() {
+// 	let currentCoins = parseInt(localStorage.getItem('coins'));
+//     let currentPowerPoints = parseInt(localStorage.getItem('powerPoints'));
+//     let currentCredits = parseInt(localStorage.getItem('credits'));
+//     let currentGems = parseInt(localStorage.getItem('gems'));
+
+// 	let moreCoins = currentCoins + 1000;
+// 	let morePowerPoints = currentPowerPoints + 1000;
+// 	let moreCredits = currentCredits + 1000;
+// 	let moreGems = currentGems + 1000;
+
+// 	localStorage.setItem('coins', moreCoins);
+//     localStorage.setItem('powerPoints', morePowerPoints);
+//     localStorage.setItem('credits', moreCredits);
+//     localStorage.setItem('gems', moreGems);
+
+// 	updateResources();
+// }
+
 function updateResources() {
-    updateCoins();
+	let display = queryAll('.count');
+
+	display.forEach(element => {
+		id = element.id;
+		let storage = localStorage.getItem(id)
+		element.textContent = "Quantidade: " + storage;
+	})
+
+    let coinsDisplay = getById('coins-display');
+    let powerPointsDisplay = getById('power-points-display');
+    let creditsDisplay = getById('credits-display');
+    let gemsDisplay = getById('gems-display');
+
+	coinsDisplay.textContent = localStorage.getItem('coins');
+	powerPointsDisplay.textContent = localStorage.getItem('powerPoints');
+	creditsDisplay.textContent = localStorage.getItem('credits');
+	gemsDisplay.textContent = localStorage.getItem('gems');
 }
 
 updateResources();

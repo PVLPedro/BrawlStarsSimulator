@@ -1,0 +1,12 @@
+---
+import { X } from '@lucide/astro';
+
+const { id } = Astro.props;
+---
+
+<div id={id} popover class="fixed flex-col items-center gap-bs top-1/2 left-1/2 -translate-1/2 rounded-lg backdrop:bg-backdrop backdrop:backdrop-blur-2xs bg-bg-secondary p-2xl h-80 w-120 border-2 border-highlight text-white">
+    <button popovertarget={id} class="absolute top-bs right-bs p-2xs bg-bg-primary hover:bg-bg-primary-hover cursor-pointer rounded-[50%]">
+        <X />
+    </button>
+    <slot />
+</div>

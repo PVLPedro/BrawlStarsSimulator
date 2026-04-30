@@ -1,0 +1,7 @@
+---
+const { id, width, "popover-target": popoverTarget, "class-name": className } = Astro.props;
+---
+
+<button id={id} popovertarget={popoverTarget} class=`${className} ${width} cursor-pointer rounded-xs p-2xs font-bold bg-buy hover:bg-buy-hover` >
+    <slot />
+</button>

@@ -1,0 +1,10 @@
+---
+const { src, id, "alt-img": altImg,  } = Astro.props;
+---
+
+<li class="bg-resources font-brawl-stars text-lg h-8 px-sm w-32">
+    <img src=`assets/images/icon-resource-${src}.png` alt={altImg} class="h-full p-2xs">
+    <span id={id} class="grow text-center text-xl">
+
+    </span>
+</li>

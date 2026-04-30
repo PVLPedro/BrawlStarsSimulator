@@ -1,0 +1,68 @@
+---
+import BoxCard from '../components/boxes/BoxCard.astro';
+import CountDisplay from '../components/boxes/CountDisplay.astro';
+import Button from '../components/Button.astro';
+import BuyButton from '../components/shop/BuyButton.astro';
+import Confirmation from '../components/shop/Confirmation.astro';
+import Title from '../components/Title.astro';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+    <main class="relative flex flex-col gap-bs min-h-[calc(100dvh-80px-calc(2*var(--spacing-bs)))] p-bs rounded-xl bg-bg-primary">
+        <Title>Loja</Title>
+        <section class="flex gap-bs flex-wrap">
+			<BoxCard box="big-box" img-alt="Caixa Grande">
+				<span class="text-lg">Caixa Grande</span>
+                <span class="flex gap-sm">
+                    Preço: 30
+                    <img src="assets/images/icon-resource-gem.png" alt="" class="h-6" />
+                </span>
+				<CountDisplay id="bigBoxCount" class-name="big-box-count" />
+				<BuyButton id="buy-big-box" popover-target="big-box-confirmation" width="max-w-40">Comprar</BuyButton>
+			</BoxCard>
+			<BoxCard box="mega-box" img-alt="Mega Caixa">
+				<span class="text-lg">Mega Caixa</span>
+                <span class="flex gap-sm">
+                    Preço: 80
+                    <img src="assets/images/icon-resource-gem.png" alt="" class="h-6" />
+                </span>
+				<CountDisplay id="megaBoxCount" class-name="mega-box-count" />
+				<BuyButton id="buy-mega-box" popover-target="mega-box-confirmation" width="max-w-40">Comprar</BuyButton>
+			</BoxCard>
+		</section>
+        <Confirmation id="big-box-confirmation">
+            <div class="grid grid-cols-[auto_1fr] w-full items-center gap-y-bs gap-x-2xl text-center font-medium">
+				<img src="assets/images/big-box.png" alt="Caixa Grande" class="size-20 row-span-3" />
+				<Title>Caixa Grande</Title>
+                <span class="flex justify-around">
+                    <span class="flex gap-sm">
+                        Preço: 30
+                        <img src="assets/images/icon-resource-gem.png" alt="" class="h-6" />
+                    </span>
+				    <CountDisplay id="bigBoxCount" class-name="big-box-count" />
+                </span>
+				<BuyButton id="big-box-purchase" width="max-full">Confirmar Compra</BuyButton>
+			</div>
+        </Confirmation>
+        <Confirmation id="mega-box-confirmation">
+            <div class="grid grid-cols-[auto_1fr] w-full items-center gap-y-bs gap-x-2xl text-center font-medium">
+				<img src="assets/images/mega-box.png" alt="Caixa Grande" class="size-20 row-span-3" />
+				<Title>Caixa Grande</Title>
+                <span class="flex justify-around">
+                    <span class="flex gap-sm">
+                        Preço: 30
+                        <img src="assets/images/icon-resource-gem.png" alt="" class="h-6" />
+                    </span>
+                    <CountDisplay id="megaBoxCount" class-name="mega-box-count" />
+                </span>
+				<BuyButton id="mega-box-purchase" width="max-full">Confirmar Compra</BuyButton>
+			</div>
+        </Confirmation>
+    </main>
+</Layout>
+
+<script>
+
+
+</script>

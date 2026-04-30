@@ -1,0 +1,7 @@
+---
+const { id } = Astro.props;
+---
+
+<ul id={id} class="reward-list w-full flex flex-wrap gap-2xs *:flex *:flex-col *:w-16 *:border-2 *:border-border *:text-center *:font-medium *:[&_span]:bg-bg-primary">
+    <slot />
+</ul>

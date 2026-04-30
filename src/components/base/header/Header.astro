@@ -1,0 +1,22 @@
+---
+import { Settings, PartyPopper } from '@lucide/astro';
+
+import Logo from './Logo.astro';
+import ItemDisplay from './ItemDisplay.astro';
+---
+
+<header class="relative flex justify-between h-20 w-full p-bs bg-bg-secondary border-border">
+    <Logo />
+    <ul class="flex gap-bs items-center *:flex *:justify-center *:items-center *:min-w-16 *:rounded-bs">
+        <button id="reset-resources" popovertarget="config" class="h-full hover:bg-bg-secondary-hover">
+            <Settings />
+        </button>
+        <button id="thousand-resources" popovertarget="as" class="h-full hover:bg-bg-secondary-hover">
+            <PartyPopper />
+        </button>
+        <ItemDisplay id="coins-display" src="coin" alt-img="Moedas" />
+        <ItemDisplay id="power-points-display" src="power-point" alt-img="Pontos de Poder" />
+        <ItemDisplay id="credits-display" src="credits" alt-img="Vales" />
+        <ItemDisplay id="gems-display" src="gem" alt-img="Gemas" />
+    </ul>
+</header>

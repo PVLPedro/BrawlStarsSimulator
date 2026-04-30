@@ -3,27 +3,60 @@ import Layout from '../layouts/Layout.astro';
 import Title from '../components/Title.astro';
 import BoxCard from '../components/boxes/BoxCard.astro';
 import Button from '../components/Button.astro';
+import Rewards from '../components/boxes/Rewards.astro';
+import RewardList from '../components/boxes/RewardList.astro';
+import CountDisplay from '../components/boxes/CountDisplay.astro';
 ---
 
 <Layout>
-	<main class="flex flex-col gap-bs min-h-[calc(100dvh-80px-calc(2*var(--spacing-bs)))] p-bs rounded-xl bg-bg-primary">
+	<main class="relative flex flex-col gap-bs min-h-[calc(100dvh-80px-calc(2*var(--spacing-bs)))] p-bs rounded-xl bg-bg-primary">
 		<Title>Caixas</Title>
 		<section class="flex gap-bs flex-wrap">
-			<BoxCard box="brawl-box" imgAlt="Caixa Brawl">
+			<BoxCard box="brawl-box" img-alt="Caixa Brawl" popoverId="popover-reward">
 				<span class="text-lg font-medium">Caixa Brawl</span>
 				<span>Ilimitado</span>
-				<Button id="brawl-box" width="max-w-40">Abrir</Button>
+				<Button id="open-brawl-box" popover-target="brawl-box-reward" width="max-w-40">Abrir</Button>
 			</BoxCard>
-			<BoxCard box="big-box" imgAlt="Caixa Grande">
+			<BoxCard box="big-box" img-alt="Caixa Grande">
 				<span class="text-lg font-medium">Caixa Grande</span>
-				<span>Quantidade: <!-- {bigBoxCount} --></span>
-				<Button id="big-box" width="max-w-40">Abrir</Button>
+				<CountDisplay id="bigBoxCount" class-name="big-box-count" />
+				<Button id="open-big-box" popover-target="big-box-reward" width="max-w-40">Abrir</Button>
 			</BoxCard>
-			<BoxCard box="mega-box" imgAlt="Mega Caixa">
+			<BoxCard box="mega-box" img-alt="Mega Caixa">
 				<span class="text-lg font-medium">Mega Caixa</span>
-				<span>Quantidade: <!-- {megaBoxCount --></span>
-				<Button id="mega-box" width="max-w-40">Abrir</Button>
+				<CountDisplay id="megaBoxCount" class-name="mega-box-count" />
+				<Button id="open-mega-box" popover-target="mega-box-reward" width="max-w-40">Abrir</Button>
 			</BoxCard>
 		</section>
+		<Rewards id="brawl-box-reward">
+			<div class="grid grid-cols-[auto_1fr] w-full items-center gap-y-bs gap-x-2xl text-center">
+				<img src="assets/images/brawl-box.png" alt="Caixa Brawl" class="size-20 row-span-3" />
+				<Title>Caixa Brawl</Title>
+				<span>Ilimitado</span>
+				<Button id="brawl-box" width="max-full">Abrir</Button>
+			</div>
+			<span>Recompensas</span>
+			<RewardList id="brawl-box-reward-list" />
+		</Rewards>
+		<Rewards id="big-box-reward">
+			<div class="grid grid-cols-[auto_1fr] w-full items-center gap-y-bs gap-x-2xl text-center">
+				<img src="assets/images/big-box.png" alt="Caixa Grande" class="size-20 row-span-3" />
+				<Title>Caixa Grande</Title>
+				<CountDisplay id="bigBoxCount" class-name="big-box-count" />
+				<Button id="big-box" width="max-full">Abrir</Button>
+			</div>
+			<span>Recompensas</span>
+			<RewardList id="big-box-reward-list" />
+		</Rewards>
+		<Rewards id="mega-box-reward">
+			<div class="grid grid-cols-[auto_1fr] w-full items-center gap-y-bs gap-x-2xl text-center">
+				<img src="assets/images/mega-box.png" alt="Mega Caixa" class="size-20 row-span-3" />
+				<Title>Mega Caixa</Title>
+				<CountDisplay id="megaBoxCount" class-name="mega-box-count" />
+				<Button id="mega-box" width="max-full">Abrir</Button>
+			</div>
+			<span>Recompensas</span>
+			<RewardList id="mega-box-reward-list" />
+		</Rewards>
 	</main>
 </Layout>
